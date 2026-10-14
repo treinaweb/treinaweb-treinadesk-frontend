@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TreinaDesk — Frontend
 
-## Getting Started
+Frontend do helpdesk TreinaDesk em Next.js 16 (App Router, `cacheComponents`), React 19, Tailwind 4 e shadcn/base-ui.
 
-First, run the development server:
+O navegador nunca chama a API: toda chamada passa pelo servidor Next (BFF), e os tokens ficam só em cookies httpOnly. Leia antes de contribuir:
+
+- `docs/frontend-guidelines.md`: regras obrigatórias (BFF, cookies, refresh, zod em pt-BR, testes, responsividade).
+- `docs/api-reference.md`: contrato da API (Swagger em `http://localhost:3000/docs`).
+- `components/ui/references/design-system.md`: design system.
+
+## Configuração
+
+Pré-requisitos: Node 24 e a API TreinaDesk rodando (por padrão em `http://localhost:3000`).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # ajuste API_BASE_URL se necessário
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`API_BASE_URL` é variável **só de servidor** (nunca `NEXT_PUBLIC_*`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Desenvolvimento
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+A API já ocupa a porta 3000, então suba o Next em outra porta:
 
-## Learn More
+```bash
+npm run dev -- --port 3001
+```
 
-To learn more about Next.js, take a look at the following resources:
+Abra `http://localhost:3001`: `/login`, `/cadastro` e `/dashboard` (protegido).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Testes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Unitários (Vitest)
 
-## Deploy on Vercel
+```bash
+npm test            # uma execução
+npm run test:watch  # modo watch
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### E2E (Playwright, contra a API real)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Crie o `.env.e2e` a partir do `.env.example` (não é versionado). Defina `API_BASE_URL` e, para os testes de papel, as credenciais dos usuários fixos `E2E_ADMIN_*`, `E2E_SUPPORT_*` e `E2E_CUSTOMER_*`. Sem essas credenciais, os testes de papel aparecem como pulados, com o motivo no relatório.
+2. Instale o navegador uma vez: `npx playwright install chromium`.
+3. Com a API rodando:
+
+```bash
+npm run test:e2e
+```
+
+O Playwright sobe o `next dev` na porta `E2E_PORT` (padrão 3100) e roda cada teste nos projetos `desktop` e `mobile`. Se a API não responder, a execução falha com uma mensagem clara.
+
+Os testes de sessão criam usuários descartáveis (`e2e+...@treinadesk.test`) via `POST /users`. Nunca altere o papel dos usuários fixos.
+
+## Estrutura
+
+```
+proxy.ts               refresh preventivo e redirecionamentos por sessão
+app/(auth)/            /login e /cadastro (Server Actions + formulários)
+app/dashboard/         área autenticada
+lib/api/               cliente HTTP da API (server-only) e mapeamento de erros
+lib/auth/              cookies, JWT, refresh single-flight, DAL, logout
+lib/validation/        schemas zod com mensagens pt-BR
+e2e/                   testes Playwright
+```

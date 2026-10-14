@@ -304,9 +304,10 @@ Espelhe estas regras no client para dar feedback imediato. A API valida de novo 
 | Campo | Regra |
 |---|---|
 | `name` (usuário) | 2–100 caracteres |
-| `email` | formato de e-mail, máx. 200. É normalizado (minúsculas, sem espaços nas extremidades) |
+| `email` (cadastro e staff) | formato de e-mail, máx. 200. É normalizado (minúsculas, sem espaços nas extremidades) |
+| `email` (login) | string obrigatória. A API **não** valida formato nem tamanho no `LoginDto`; o frontend valida o formato mesmo assim (decisão de produto: toda conta passou pela validação do cadastro) |
 | `password` (cadastro) | 8–128 caracteres |
-| `password` (login) | máx. 128 |
+| `password` (login) | obrigatória, máx. 128 |
 | `role` (staff) | `SUPPORT` ou `ADMIN` |
 | `name` (categoria) | 2–60 caracteres |
 | `title` (ticket) | 5–120 caracteres |
@@ -322,6 +323,12 @@ Espelhe estas regras no client para dar feedback imediato. A API valida de novo 
 ## Erros
 
 Todos os erros seguem `ErrorResponse`. Em erros de validação, `message` pode ser um **array** de strings.
+
+Observado na API real (out/2026):
+
+- Os 401 de token ausente/inválido vêm como `{ "message": "Unauthorized", "statusCode": 401 }`, **sem** o campo `error`. O login com credenciais erradas retorna `message: "Credenciais inválidas"`.
+- As mensagens 400 são do class-validator, em inglês, no formato `<campo> <regra>` (ex.: `email must be an email`, `password should not be empty`, `name must be longer than or equal to 2 characters`). Nunca exiba esse texto: o frontend o converte em campo + regra (`lib/api/errors.ts`) e mostra a mensagem pt-BR do formulário.
+- O `accessToken` é um JWT com a claim `exp` (validade de 15 min), usada pelo `proxy.ts` para a renovação preventiva.
 
 | Status | Significado | Ação sugerida na UI |
 |---|---|---|

@@ -2,7 +2,16 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark {
+  &:is(.dark *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:not(:is(.light *)) {
+      @slot;
+    }
+  }
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -39,6 +48,10 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-primary-pressed: var(--primary-pressed);
+  --radius-panel: 1rem;
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -48,73 +61,133 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/*
+ * Tokens do design system TreinaDesk (components/ui/references/design-system.md)
+ * mapeados para as variáveis do shadcn. Tema claro: canvas branco, painéis
+ * cloud, tinta ink e Electric Blue como única cor de ação.
+ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --ds-primary: #024ad8;
+  --ds-primary-bright: #296ef9;
+  --ds-primary-deep: #0e3191;
+  --ds-primary-soft: #c9e0fc;
+  --ds-canvas: #ffffff;
+  --ds-cloud: #f7f7f7;
+  --ds-fog: #e8e8e8;
+  --ds-steel: #c2c2c2;
+  --ds-ink: #1a1a1a;
+  --ds-ink-soft: #292929;
+  --ds-charcoal: #3d3d3d;
+  --ds-graphite: #636363;
+  --ds-on-ink: #ffffff;
+  --ds-bloom-deep: #b3262b;
+  --ds-bloom-coral: #ff5050;
+  --ds-bloom-rose: #f9d4d2;
+
+  --background: var(--ds-canvas);
+  --foreground: var(--ds-ink);
+  --card: var(--ds-cloud);
+  --card-foreground: var(--ds-ink);
+  --popover: var(--ds-canvas);
+  --popover-foreground: var(--ds-ink);
+  --primary: var(--ds-primary);
+  --primary-foreground: var(--ds-on-ink);
+  --primary-pressed: var(--ds-primary-deep);
+  --secondary: var(--ds-fog);
+  --secondary-foreground: var(--ds-ink);
+  --muted: var(--ds-cloud);
+  --muted-foreground: var(--ds-graphite);
+  --accent: var(--ds-fog);
+  --accent-foreground: var(--ds-ink);
+  --destructive: var(--ds-bloom-deep);
+  --info: var(--ds-primary-soft);
+  --info-foreground: var(--ds-ink);
+  --border: var(--ds-fog);
+  --input: var(--ds-steel);
+  --ring: var(--ds-primary);
+  --chart-1: #8ebdce;
+  --chart-2: #7fadbe;
+  --chart-3: #356373;
+  --chart-4: var(--ds-primary);
+  --chart-5: var(--ds-primary-soft);
+  /* Botões e inputs: 4px. Painéis: 16px (rounded-panel). */
+  --radius: 0.25rem;
+  --sidebar: var(--ds-canvas);
+  --sidebar-foreground: var(--ds-ink);
+  --sidebar-primary: var(--ds-primary);
+  --sidebar-primary-foreground: var(--ds-on-ink);
+  --sidebar-accent: var(--ds-cloud);
+  --sidebar-accent-foreground: var(--ds-ink);
+  --sidebar-border: var(--ds-fog);
+  --sidebar-ring: var(--ds-primary);
 }
 
+/* Tema escuro: canvas ink-soft, painéis charcoal, texto on-ink, azul bright. */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: var(--ds-ink-soft);
+  --foreground: var(--ds-on-ink);
+  --card: var(--ds-charcoal);
+  --card-foreground: var(--ds-on-ink);
+  --popover: var(--ds-charcoal);
+  --popover-foreground: var(--ds-on-ink);
+  --primary: var(--ds-primary-bright);
+  --primary-foreground: var(--ds-on-ink);
+  --primary-pressed: var(--ds-primary);
+  --secondary: var(--ds-charcoal);
+  --secondary-foreground: var(--ds-on-ink);
+  --muted: var(--ds-charcoal);
+  --muted-foreground: var(--ds-steel);
+  --accent: var(--ds-charcoal);
+  --accent-foreground: var(--ds-on-ink);
+  --destructive: var(--ds-bloom-coral);
+  --info: var(--ds-primary-soft);
+  --info-foreground: var(--ds-ink);
+  --border: var(--ds-charcoal);
+  --input: var(--ds-graphite);
+  --ring: var(--ds-primary-bright);
+  --sidebar: var(--ds-ink-soft);
+  --sidebar-foreground: var(--ds-on-ink);
+  --sidebar-primary: var(--ds-primary-bright);
+  --sidebar-primary-foreground: var(--ds-on-ink);
+  --sidebar-accent: var(--ds-charcoal);
+  --sidebar-accent-foreground: var(--ds-on-ink);
+  --sidebar-border: var(--ds-charcoal);
+  --sidebar-ring: var(--ds-primary-bright);
+}
+
+/* Sem seletor de tema ainda: segue a preferência do sistema (exceto .light). */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: var(--ds-ink-soft);
+    --foreground: var(--ds-on-ink);
+    --card: var(--ds-charcoal);
+    --card-foreground: var(--ds-on-ink);
+    --popover: var(--ds-charcoal);
+    --popover-foreground: var(--ds-on-ink);
+    --primary: var(--ds-primary-bright);
+    --primary-foreground: var(--ds-on-ink);
+    --primary-pressed: var(--ds-primary);
+    --secondary: var(--ds-charcoal);
+    --secondary-foreground: var(--ds-on-ink);
+    --muted: var(--ds-charcoal);
+    --muted-foreground: var(--ds-steel);
+    --accent: var(--ds-charcoal);
+    --accent-foreground: var(--ds-on-ink);
+    --destructive: var(--ds-bloom-coral);
+    --info: var(--ds-primary-soft);
+    --info-foreground: var(--ds-ink);
+    --border: var(--ds-charcoal);
+    --input: var(--ds-graphite);
+    --ring: var(--ds-primary-bright);
+    --sidebar: var(--ds-ink-soft);
+    --sidebar-foreground: var(--ds-on-ink);
+    --sidebar-primary: var(--ds-primary-bright);
+    --sidebar-primary-foreground: var(--ds-on-ink);
+    --sidebar-accent: var(--ds-charcoal);
+    --sidebar-accent-foreground: var(--ds-on-ink);
+    --sidebar-border: var(--ds-charcoal);
+    --sidebar-ring: var(--ds-primary-bright);
+  }
 }
 
 @layer base {
