@@ -43,6 +43,19 @@ describe("proxy: redirecionamentos", () => {
     expect(refreshMock).not.toHaveBeenCalled();
   });
 
+  it("visitante em subrota protegida → /login?next= com a query", async () => {
+    const res = await proxy(request("/chamados?status=OPEN"));
+    expect(location(res)).toBe("/login?next=%2Fchamados%3Fstatus%3DOPEN");
+  });
+
+  it.each(["/categorias", "/usuarios", "/chamados/novo"])(
+    "visitante em %s → login",
+    async (path) => {
+      const res = await proxy(request(path));
+      expect(location(res)).toBe(`/login?next=${encodeURIComponent(path)}`);
+    },
+  );
+
   it("raiz sem sessão → /login; com sessão → /dashboard", async () => {
     expect(location(await proxy(request("/")))).toBe("/login");
     expect(location(await proxy(request("/", { td_access: fresh(), td_refresh: "r" })))).toBe(

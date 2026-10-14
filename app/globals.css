@@ -51,6 +51,26 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
   --color-primary-pressed: var(--primary-pressed);
+  /* Paleta fixa do design system (igual nos dois temas): chips, cartões KPI e gráficos. */
+  --color-primary-soft: var(--ds-primary-soft);
+  --color-primary-deep: var(--ds-primary-deep);
+  --color-ink: var(--ds-ink);
+  --color-cloud: var(--ds-cloud);
+  --color-fog: var(--ds-fog);
+  --color-steel: var(--ds-steel);
+  --color-graphite: var(--ds-graphite);
+  --color-charcoal: var(--ds-charcoal);
+  --color-on-ink: var(--ds-on-ink);
+  --color-bloom-deep: var(--ds-bloom-deep);
+  --color-bloom-coral: var(--ds-bloom-coral);
+  --color-bloom-rose: var(--ds-bloom-rose);
+  --color-storm-mist: var(--ds-storm-mist);
+  --color-storm-sea: var(--ds-storm-sea);
+  --color-storm-deep: var(--ds-storm-deep);
+  --color-chart-blue: var(--ds-chart-blue);
+  --color-chart-mint: var(--ds-chart-mint);
+  --color-chart-green: var(--ds-chart-green);
+  --color-chart-violet: var(--ds-chart-violet);
   --radius-panel: 1rem;
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -83,6 +103,14 @@
   --ds-bloom-deep: #b3262b;
   --ds-bloom-coral: #ff5050;
   --ds-bloom-rose: #f9d4d2;
+  --ds-storm-mist: #8ebdce;
+  --ds-storm-sea: #7fadbe;
+  --ds-storm-deep: #356373;
+  /* Paleta de gráficos (referências Dashboard-reference-*.png). */
+  --ds-chart-blue: #a0bce8;
+  --ds-chart-mint: #6de0cd;
+  --ds-chart-green: #71dd8c;
+  --ds-chart-violet: #b899eb;
 
   --background: var(--ds-canvas);
   --foreground: var(--ds-ink);
@@ -105,9 +133,9 @@
   --border: var(--ds-fog);
   --input: var(--ds-steel);
   --ring: var(--ds-primary);
-  --chart-1: #8ebdce;
-  --chart-2: #7fadbe;
-  --chart-3: #356373;
+  --chart-1: var(--ds-storm-mist);
+  --chart-2: var(--ds-storm-sea);
+  --chart-3: var(--ds-storm-deep);
   --chart-4: var(--ds-primary);
   --chart-5: var(--ds-primary-soft);
   /* Botões e inputs: 4px. Painéis: 16px (rounded-panel). */

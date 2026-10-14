@@ -1,5 +1,13 @@
 import { expect, test } from "@playwright/test";
-import { PASSWORD, createDisposableUser, loginAndWait, signup, uniqueEmail } from "./support";
+import {
+  PASSWORD,
+  createDisposableUser,
+  expectRole,
+  loginAndWait,
+  logout,
+  signup,
+  uniqueEmail,
+} from "./support";
 
 test.describe("Criar conta", () => {
   test("cadastro com e-mail novo → dashboard logado como Cliente", async ({ page, context }) => {
@@ -8,7 +16,7 @@ test.describe("Criar conta", () => {
 
     await expect(page).toHaveURL(/\/dashboard$/);
     await expect(page.getByRole("heading", { name: `Olá, ${name}` })).toBeVisible();
-    await expect(page.getByRole("main").getByText("Cliente", { exact: true })).toBeVisible();
+    await expectRole(page, "Cliente");
     const names = (await context.cookies()).map((c) => c.name);
     expect(names).toEqual(expect.arrayContaining(["td_access", "td_refresh"]));
   });
@@ -49,7 +57,7 @@ test.describe("Criar conta", () => {
     await signup(page, { name: "Caso", email: `  ${email.toUpperCase()} `, password: PASSWORD });
     await expect(page).toHaveURL(/\/dashboard$/);
 
-    await page.getByRole("button", { name: "Sair" }).click();
+    await logout(page);
     await expect(page).toHaveURL(/\/login/);
     await loginAndWait(page, email, PASSWORD);
   });

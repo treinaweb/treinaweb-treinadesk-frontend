@@ -79,3 +79,31 @@ export async function sessionCookies(context: BrowserContext) {
 export function decodeJwtPayload(token: string): Record<string, unknown> {
   return JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString("utf8"));
 }
+
+/**
+ * Região da moldura com a navegação e a área do usuário: a sidebar a partir
+ * de md, ou o drawer (aberto por "Abrir menu") no mobile.
+ */
+export async function openShell(page: Page) {
+  const menu = page.getByRole("button", { name: "Abrir menu" });
+  if (await menu.isVisible()) {
+    await menu.click();
+    const drawer = page.getByRole("dialog");
+    await expect(drawer).toBeVisible();
+    return drawer;
+  }
+  return page.locator("aside");
+}
+
+/** Confere o papel exibido na área do usuário (sidebar ou drawer). */
+export async function expectRole(page: Page, label: string) {
+  const shell = await openShell(page);
+  await expect(shell.locator('[data-slot="user-role"]')).toHaveText(label);
+  return shell;
+}
+
+/** Clica em "Sair" (no mobile, abre o drawer antes). */
+export async function logout(page: Page) {
+  const shell = await openShell(page);
+  await shell.getByRole("button", { name: "Sair" }).click();
+}

@@ -57,6 +57,11 @@ describe("rotas", () => {
     ["/dashboard", true],
     ["/dashboard/x", true],
     ["/dashboards", false],
+    ["/chamados", true],
+    ["/chamados/novo", true],
+    ["/categorias", true],
+    ["/usuarios/x", true],
+    ["/chamadosx", false],
     ["/", false],
     ["/login", false],
   ])("isProtectedRoute(%s) = %s", (path, expected) => {

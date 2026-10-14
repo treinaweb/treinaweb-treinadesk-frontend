@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { createDisposableUser, fixedUser, login, loginAndWait } from "./support";
+import { createDisposableUser, expectRole, fixedUser, login, loginAndWait } from "./support";
 
 test.describe("Entrar", () => {
   test("credenciais válidas → dashboard com nome e papel Cliente", async ({ page }) => {
@@ -7,14 +7,14 @@ test.describe("Entrar", () => {
     await loginAndWait(page, user.email, user.password);
 
     await expect(page.getByRole("heading", { name: `Olá, ${user.name}` })).toBeVisible();
-    await expect(page.getByRole("main").getByText("Cliente", { exact: true })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Sair" })).toBeVisible();
+    const shell = await expectRole(page, "Cliente");
+    await expect(shell.getByRole("button", { name: "Sair" })).toBeVisible();
   });
 
   test("usuário fixo CUSTOMER entra e vê papel Cliente", async ({ page }) => {
     const user = fixedUser("CUSTOMER");
     await loginAndWait(page, user.email, user.password);
-    await expect(page.getByRole("main").getByText("Cliente", { exact: true })).toBeVisible();
+    await expectRole(page, "Cliente");
   });
 
   test("credenciais inválidas → alerta, mantém e-mail e limpa senha", async ({ page, context }) => {
@@ -119,12 +119,12 @@ test.describe("Papéis de equipe (usuários fixos)", () => {
   test("SUPPORT vê 'Atendente'", async ({ page }) => {
     const user = fixedUser("SUPPORT");
     await loginAndWait(page, user.email, user.password);
-    await expect(page.getByRole("main").getByText("Atendente", { exact: true })).toBeVisible();
+    await expectRole(page, "Atendente");
   });
 
   test("ADMIN vê 'Administrador'", async ({ page }) => {
     const user = fixedUser("ADMIN");
     await loginAndWait(page, user.email, user.password);
-    await expect(page.getByRole("main").getByText("Administrador", { exact: true })).toBeVisible();
+    await expectRole(page, "Administrador");
   });
 });

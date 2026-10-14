@@ -19,6 +19,12 @@ export class RedirectSignal extends Error {
   }
 }
 
+export class NotFoundSignal extends Error {
+  constructor() {
+    super("NOT_FOUND");
+  }
+}
+
 export const nextHeadersMock = {
   cookies: vi.fn(async () => nextState.cookies),
 };
@@ -26,6 +32,13 @@ export const nextHeadersMock = {
 export const nextNavigationMock = {
   redirect: vi.fn((url: string) => {
     throw new RedirectSignal(url);
+  }),
+  notFound: vi.fn(() => {
+    throw new NotFoundSignal();
+  }),
+  /** Como no Next: relança só os sinais de controle (redirect/notFound). */
+  unstable_rethrow: vi.fn((error: unknown) => {
+    if (error instanceof RedirectSignal || error instanceof NotFoundSignal) throw error;
   }),
 };
 

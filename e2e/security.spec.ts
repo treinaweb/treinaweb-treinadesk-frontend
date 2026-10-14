@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { createDisposableUser, loginAndWait, sessionCookies } from "./support";
+import { createDisposableUser, loginAndWait, logout, sessionCookies } from "./support";
 
 test("navegador nunca chama a API e tokens não aparecem no HTML", async ({ page, context }) => {
   const apiOrigin = new URL(process.env.API_BASE_URL!).origin;
@@ -25,7 +25,7 @@ test("navegador nunca chama a API e tokens não aparecem no HTML", async ({ page
   expect(await page.evaluate(() => document.cookie)).not.toContain("td_");
 
   await page.reload();
-  await page.getByRole("button", { name: "Sair" }).click();
+  await logout(page);
   await expect(page).toHaveURL(/\/login\?aviso=logout$/);
 
   expect(apiCalls).toEqual([]);

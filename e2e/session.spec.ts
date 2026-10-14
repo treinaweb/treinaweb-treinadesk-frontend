@@ -1,5 +1,11 @@
 import { expect, test } from "@playwright/test";
-import { createDisposableUser, decodeJwtPayload, loginAndWait, sessionCookies } from "./support";
+import {
+  createDisposableUser,
+  decodeJwtPayload,
+  loginAndWait,
+  logout,
+  sessionCookies,
+} from "./support";
 
 // Testes de sessão: sempre com usuários descartáveis (nunca os fixos).
 
@@ -66,7 +72,7 @@ test.describe("Sessão encerrada", () => {
     await loginAndWait(page, user.email, user.password);
     const { refresh } = await sessionCookies(context);
 
-    await page.getByRole("button", { name: "Sair" }).click();
+    await logout(page);
     await expect(page).toHaveURL(/\/login\?aviso=logout$/);
     await expect(page.getByText("Você saiu da sua conta.")).toBeVisible();
     expect((await sessionCookies(context)).refresh).toBeUndefined();
@@ -85,7 +91,7 @@ test.describe("Sessão encerrada", () => {
     await page.goto("/login");
     await loginAndWait(page, user.email, user.password);
 
-    await page.getByRole("button", { name: "Sair" }).click();
+    await logout(page);
     await expect(page).toHaveURL(/\/login\?aviso=logout$/);
 
     await page.goBack();
