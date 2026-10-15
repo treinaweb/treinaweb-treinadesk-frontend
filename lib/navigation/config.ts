@@ -62,6 +62,19 @@ export const ROUTE_ACCESS: Record<string, Role[]> = {
   "/usuarios": ["ADMIN"],
 };
 
+/**
+ * Subpáginas com breadcrumb de três níveis ("Painel / {pai} / {subpágina}").
+ * O rótulo do pai vem do item de navegação. As demais subrotas (ex.:
+ * `/chamados/novo`, `/chamados/{id}`) continuam com dois níveis.
+ */
+export const SUBPAGES: Record<string, { parent: string; label: string }> = {
+  "/usuarios/novo": { parent: "/usuarios", label: "Novo usuário" },
+};
+
+function subpageFor(path: string) {
+  return Object.hasOwn(SUBPAGES, path) ? SUBPAGES[path] : null;
+}
+
 function resolve(item: NavItemConfig, role: Role): NavLink {
   return { href: item.href, label: item.labelByRole?.[role] ?? item.label, icon: item.icon };
 }
@@ -104,6 +117,8 @@ export function pageTitleFor(role: Role, pathname: string): string | null {
   const path = stripQuery(pathname);
   if (path === DASHBOARD_HREF) return DASHBOARD_LABEL;
   if (path === PRIMARY_ACTION.href) return PRIMARY_ACTION.label;
+  const subpage = subpageFor(path);
+  if (subpage) return subpage.label;
   if (path.startsWith("/chamados/")) return "Chamado";
 
   const item = NAV_GROUPS.flatMap((g) => g.items).find((i) => matchesPrefix(path, i.href));
@@ -113,12 +128,21 @@ export function pageTitleFor(role: Role, pathname: string): string | null {
 export const NOT_FOUND_LABEL = "Página não encontrada";
 
 /**
- * "Painel" na raiz; "Painel / {página}" nas demais páginas autenticadas.
- * Rota vetada ao papel não revela o nome da página.
+ * "Painel" na raiz; "Painel / {página}" nas demais páginas autenticadas e
+ * "Painel / {pai} / {subpágina}" nas `SUBPAGES`. Rota vetada ao papel não
+ * revela o nome da página.
  */
 export function breadcrumbFor(role: Role, pathname: string): Crumb[] {
   if (!canAccess(role, pathname)) {
     return [{ label: DASHBOARD_LABEL, href: DASHBOARD_HREF }, { label: NOT_FOUND_LABEL }];
+  }
+  const subpage = subpageFor(stripQuery(pathname));
+  if (subpage) {
+    return [
+      { label: DASHBOARD_LABEL, href: DASHBOARD_HREF },
+      { label: pageTitleFor(role, subpage.parent) ?? subpage.parent, href: subpage.parent },
+      { label: subpage.label },
+    ];
   }
   const title = pageTitleFor(role, pathname);
   if (!title || title === DASHBOARD_LABEL) return [{ label: DASHBOARD_LABEL }];

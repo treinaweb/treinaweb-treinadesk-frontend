@@ -51,6 +51,11 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
   --color-primary-pressed: var(--primary-pressed);
+  /* Nota interna dos comentários (tom âmbar, com valores próprios no tema escuro). */
+  --color-internal-note: var(--internal-note);
+  --color-internal-note-foreground: var(--internal-note-foreground);
+  --color-internal-note-accent: var(--internal-note-accent);
+  --color-internal-note-border: var(--internal-note-border);
   /* Paleta fixa do design system (igual nos dois temas): chips, cartões KPI e gráficos. */
   --color-primary-soft: var(--ds-primary-soft);
   --color-primary-deep: var(--ds-primary-deep);
@@ -148,6 +153,11 @@
   --sidebar-accent-foreground: var(--ds-ink);
   --sidebar-border: var(--ds-fog);
   --sidebar-ring: var(--ds-primary);
+  /* Nota interna: ink sobre âmbar 15.4:1, rótulo 6.6:1, borda 3.2:1 (AA). */
+  --internal-note: #fdf0d5;
+  --internal-note-foreground: var(--ds-ink);
+  --internal-note-accent: #7a4b00;
+  --internal-note-border: #b7791f;
 }
 
 /* Tema escuro: canvas ink-soft, painéis charcoal, texto on-ink, azul bright. */
@@ -181,6 +191,11 @@
   --sidebar-accent-foreground: var(--ds-on-ink);
   --sidebar-border: var(--ds-charcoal);
   --sidebar-ring: var(--ds-primary-bright);
+  /* Nota interna: on-ink sobre âmbar escuro 11.4:1, rótulo 7.3:1, borda 5.2:1 (AA). */
+  --internal-note: #4a3712;
+  --internal-note-foreground: var(--ds-on-ink);
+  --internal-note-accent: #f6c86b;
+  --internal-note-border: #e0a43a;
 }
 
 /* Sem seletor de tema ainda: segue a preferência do sistema (exceto .light). */
@@ -215,6 +230,10 @@
     --sidebar-accent-foreground: var(--ds-on-ink);
     --sidebar-border: var(--ds-charcoal);
     --sidebar-ring: var(--ds-primary-bright);
+    --internal-note: #4a3712;
+    --internal-note-foreground: var(--ds-on-ink);
+    --internal-note-accent: #f6c86b;
+    --internal-note-border: #e0a43a;
   }
 }
 

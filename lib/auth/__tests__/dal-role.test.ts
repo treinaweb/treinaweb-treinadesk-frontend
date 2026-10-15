@@ -30,7 +30,7 @@ beforeEach(() => {
 describe("requireRole", () => {
   it("papel permitido devolve o usuário", async () => {
     mocks.getMe.mockResolvedValue(me("ADMIN"));
-    await expect(requireRole("ADMIN")).resolves.toEqual({ name: "Ana", role: "ADMIN" });
+    await expect(requireRole("ADMIN")).resolves.toEqual({ id: "u1", name: "Ana", role: "ADMIN" });
     expect(nextNavigationMock.notFound).not.toHaveBeenCalled();
   });
 

@@ -104,6 +104,40 @@ describe("breadcrumbFor / pageTitleFor", () => {
     ]);
   });
 
+  it("subpágina de Usuários: três níveis para o ADMIN, com os dois primeiros como links", () => {
+    expect(breadcrumbFor("ADMIN", "/usuarios/novo")).toEqual([
+      { label: "Painel", href: "/dashboard" },
+      { label: "Usuários", href: "/usuarios" },
+      { label: "Novo usuário" },
+    ]);
+    expect(breadcrumbFor("ADMIN", "/usuarios/novo?x=1")).toHaveLength(3);
+    expect(pageTitleFor("ADMIN", "/usuarios/novo")).toBe("Novo usuário");
+    expect(pageTitleFor("ADMIN", "/usuarios")).toBe("Usuários");
+  });
+
+  it.each([["CUSTOMER"], ["SUPPORT"]] as const)("%s em /usuarios/novo → Página não encontrada", (role) => {
+    expect(breadcrumbFor(role, "/usuarios/novo")).toEqual([
+      { label: "Painel", href: "/dashboard" },
+      { label: "Página não encontrada" },
+    ]);
+  });
+
+  it("/chamados/novo e /chamados/{id} continuam com dois níveis", () => {
+    expect(breadcrumbFor("CUSTOMER", "/chamados/novo")).toEqual([
+      { label: "Painel", href: "/dashboard" },
+      { label: "Abrir chamado" },
+    ]);
+    expect(breadcrumbFor("ADMIN", "/chamados/2b1f0c39-6b39-4b8a-9d36-2c2a1c0e9d11")).toEqual([
+      { label: "Painel", href: "/dashboard" },
+      { label: "Chamado" },
+    ]);
+  });
+
+  it("Usuários fica ativo na sidebar em /usuarios/novo", () => {
+    expect(isActive("/usuarios/novo", "/usuarios")).toBe(true);
+    expect(isActive("/usuarios/novo", "/categorias")).toBe(false);
+  });
+
   it("página desconhecida cai na raiz", () => {
     expect(breadcrumbFor("ADMIN", "/qualquer")).toEqual([{ label: "Painel" }]);
   });

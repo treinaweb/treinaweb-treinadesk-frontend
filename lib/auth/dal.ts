@@ -9,8 +9,12 @@ import { getMe } from "@/lib/api/users";
 import { readSession } from "./cookies";
 import { loginUrl } from "./notices";
 
-/** DTO enxuto enviado à UI: nunca tokens nem o objeto bruto da API. */
-export type CurrentUser = { name: string; role: Role };
+/**
+ * DTO enxuto do usuário logado: nunca tokens nem o objeto bruto da API. O `id`
+ * só é usado no servidor (ex.: saber se é o dono ou o atendente de um chamado);
+ * os Client Components recebem apenas `name` e `role`.
+ */
+export type CurrentUser = { id: string; name: string; role: Role };
 
 /**
  * Data Access Layer: usuário logado, a partir de `GET /users/me`.
@@ -26,7 +30,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser> => {
 
   try {
     const user = await getMe(accessToken);
-    return { name: user.name, role: user.role };
+    return { id: user.id, name: user.name, role: user.role };
   } catch (error) {
     if (isApiError(error) && error.status === 401) {
       // O proxy apaga os cookies ao ver este aviso, evitando loop login↔dashboard.

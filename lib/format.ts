@@ -6,6 +6,14 @@ const date = new Intl.DateTimeFormat("pt-BR", {
   year: "numeric",
   timeZone: "America/Sao_Paulo",
 });
+const dateTime = new Intl.DateTimeFormat("pt-BR", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  timeZone: "America/Sao_Paulo",
+});
 
 /** 1234 → "1.234". */
 export function formatNumber(value: number): string {
@@ -20,4 +28,9 @@ export function formatPercent(fraction: number): string {
 /** ISO 8601 → "14/10/2026" (horário de Brasília, igual no servidor e no cliente). */
 export function formatDate(iso: string): string {
   return date.format(new Date(iso));
+}
+
+/** ISO 8601 → "14/10/2026, 12:30" (horário de Brasília). */
+export function formatDateTime(iso: string): string {
+  return dateTime.format(new Date(iso));
 }

@@ -38,7 +38,7 @@ describe("getCurrentUser (Server Components)", () => {
     resetNextState({ td_access: "a1", td_refresh: "r1" });
     mocks.getMe.mockResolvedValue(user);
 
-    await expect(getCurrentUser()).resolves.toEqual({ name: "Ana", role: "CUSTOMER" });
+    await expect(getCurrentUser()).resolves.toEqual({ id: "u1", name: "Ana", role: "CUSTOMER" });
     expect(mocks.getMe).toHaveBeenCalledWith("a1");
   });
 

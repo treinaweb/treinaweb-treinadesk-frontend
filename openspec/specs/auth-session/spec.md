@@ -110,11 +110,15 @@ O sistema SHALL tratar como sessão encerrada qualquer recusa da API ao refresh 
 - **THEN** na próxima navegação o usuário é levado ao login com o aviso de sessão expirada e, ao entrar de novo, vê o novo papel
 
 ### Requirement: Proteção de rotas
-O sistema SHALL exigir sessão para as rotas autenticadas (inicialmente `/dashboard`) e SHALL afastar usuários já logados das telas de entrada e cadastro. A raiz `/` MUST encaminhar para `/dashboard` com sessão e para `/login` sem sessão.
+O sistema SHALL exigir sessão para as rotas autenticadas (`/dashboard`, `/chamados`, `/categorias`, `/usuarios` e suas subrotas) e SHALL afastar usuários já logados das telas de entrada e cadastro. A raiz `/` MUST encaminhar para `/dashboard` com sessão e para `/login` sem sessão.
 
 #### Scenario: Visitante sem sessão em rota protegida
 - **WHEN** um visitante sem cookies de sessão acessa `/dashboard`
 - **THEN** o sistema redireciona para `/login?next=/dashboard`
+
+#### Scenario: Visitante sem sessão em subrota protegida
+- **WHEN** um visitante sem cookies de sessão acessa `/chamados?status=OPEN`
+- **THEN** o sistema redireciona para `/login` com `next` igual a `/chamados?status=OPEN` e, após entrar, leva o usuário de volta a essa página
 
 #### Scenario: Usuário logado acessa login ou cadastro
 - **WHEN** um usuário com sessão ativa acessa `/login` ou `/cadastro`
@@ -129,15 +133,15 @@ O sistema SHALL exigir sessão para as rotas autenticadas (inicialmente `/dashbo
 - **THEN** o sistema não chama a API em nome do usuário e redireciona para `/login`
 
 ### Requirement: Usuário logado no dashboard
-O sistema SHALL exibir em `/dashboard` a saudação "Olá, {nome}" e o papel do usuário logado em pt-BR ("Cliente", "Atendente" ou "Administrador"), obtidos da API, e um botão "Sair" no top bar. Ao cliente MUST ser enviado apenas nome e papel, nunca tokens ou o objeto bruto da sessão.
+O sistema SHALL exibir em `/dashboard` a saudação "Olá, {nome}" e, na área do usuário da sidebar de todas as páginas autenticadas, o nome, o papel do usuário logado em pt-BR ("Cliente", "Atendente" ou "Administrador") e o botão "Sair", todos obtidos da API. Ao cliente MUST ser enviado apenas nome e papel, nunca tokens ou o objeto bruto da sessão.
 
 #### Scenario: Cliente logado vê seus dados
 - **WHEN** um usuário `CUSTOMER` chamado Ana acessa `/dashboard`
-- **THEN** a página exibe "Olá, Ana", o papel "Cliente" e o botão "Sair"
+- **THEN** a página exibe "Olá, Ana" e a sidebar mostra "Ana", o papel "Cliente" e o botão "Sair"
 
 #### Scenario: Papel de equipe
 - **WHEN** um usuário `SUPPORT` acessa `/dashboard`
-- **THEN** a página exibe o papel "Atendente"
+- **THEN** a sidebar exibe o papel "Atendente"
 
 ### Requirement: Sair
 O sistema SHALL encerrar a sessão quando o usuário clicar em "Sair": revoga o refresh token na API, apaga os cookies de sessão mesmo se a API falhar e redireciona para `/login` com a mensagem "Você saiu da sua conta.".
@@ -167,7 +171,7 @@ As telas `/login` e `/dashboard` MUST ser responsivas (mobile-first), sem scroll
 
 #### Scenario: Top bar do dashboard no mobile
 - **WHEN** o `/dashboard` é aberto em 360px de largura
-- **THEN** o top bar mostra a marca e o botão "Sair" acessível por toque, sem scroll horizontal
+- **THEN** o top bar mostra o botão "Abrir menu", e o drawer aberto por ele exibe a área do usuário com o botão "Sair" acessível por toque, sem scroll horizontal
 
 ### Requirement: Estados de envio acessíveis
 Os formulários de sessão SHALL indicar o envio em andamento desabilitando o botão e alterando seu texto (por exemplo "Entrando..."), e MUST associar as mensagens de erro aos campos de forma acessível a leitores de tela.

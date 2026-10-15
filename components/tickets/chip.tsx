@@ -4,7 +4,7 @@ import { PRIORITY_LABELS, STATUS_LABELS } from "@/lib/tickets/labels";
 import { cn } from "@/lib/utils";
 
 /** Chip com ponto colorido + texto (nunca só cor). */
-function Chip({ label, chip, dot }: { label: string; chip: string; dot: string }) {
+export function Chip({ label, chip, dot }: { label: string; chip: string; dot: string }) {
   return (
     <span
       className={cn(

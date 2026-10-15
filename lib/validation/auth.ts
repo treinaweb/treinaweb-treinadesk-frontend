@@ -7,6 +7,8 @@ export const AUTH_MESSAGES = {
   emailRequired: "Informe seu e-mail.",
   emailInvalid: "Informe um e-mail válido.",
   emailTooLong: "O e-mail deve ter no máximo 200 caracteres.",
+  /** 409 do cadastro público e do cadastro de equipe. */
+  emailTaken: "Este e-mail já está cadastrado.",
   passwordRequired: "Informe sua senha.",
   loginPasswordTooLong: "A senha deve ter no máximo 128 caracteres.",
   nameRequired: "Informe seu nome.",

@@ -5,13 +5,17 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 /** Falha isolada de um painel: os demais continuam visíveis. */
-export function PanelError() {
+export function PanelError({
+  message = "Não foi possível carregar estes dados.",
+}: {
+  message?: string;
+}) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
   return (
     <div role="alert" className="flex flex-col items-start gap-3">
-      <p className="text-sm">Não foi possível carregar estes dados.</p>
+      <p className="text-sm">{message}</p>
       <button
         type="button"
         disabled={pending}

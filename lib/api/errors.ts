@@ -40,6 +40,8 @@ export const MESSAGES = {
  */
 const KNOWN_MESSAGES: Record<string, string> = {
   "Credenciais inválidas": "E-mail ou senha inválidos.",
+  // 422 de `PATCH /users/{id}/role` no próprio usuário (já vem em pt-BR, sem ponto final).
+  "Não é permitido alterar o próprio papel": "Não é permitido alterar o próprio papel.",
 };
 
 /**

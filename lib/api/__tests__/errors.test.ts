@@ -28,6 +28,15 @@ describe("toUserMessage", () => {
     );
   });
 
+  it("422 do próprio papel é traduzido; outro 422 cai no texto genérico", () => {
+    expect(toUserMessage(new ApiError(422, ["Não é permitido alterar o próprio papel"]))).toBe(
+      "Não é permitido alterar o próprio papel.",
+    );
+    expect(toUserMessage(new ApiError(422, ["Outra regra qualquer"]))).toBe(
+      "Não foi possível concluir a ação.",
+    );
+  });
+
   it("erro que não é da API vira genérico", () => {
     expect(toUserMessage(new Error("boom"))).toBe(MESSAGES.generic);
   });

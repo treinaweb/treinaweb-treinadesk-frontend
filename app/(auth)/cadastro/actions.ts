@@ -13,8 +13,6 @@ import { DEFAULT_AFTER_LOGIN } from "@/lib/auth/redirect";
 import { AUTH_MESSAGES, signupSchema } from "@/lib/validation/auth";
 import { issuesToFieldErrors, readFormFields, toFieldErrors } from "@/lib/validation/form";
 
-const EMAIL_TAKEN = "Este e-mail já está cadastrado.";
-
 /** Mensagens pt-BR para as violações 400 da API no cadastro. */
 const API_FIELD_MESSAGES: Record<
   Exclude<SignupField, "confirmPassword">,
@@ -44,7 +42,7 @@ export async function signupAction(_prev: SignupState, formData: FormData): Prom
     await createUser({ name, email, password });
   } catch (error) {
     if (isApiError(error) && error.status === 409) {
-      return { fieldErrors: { email: EMAIL_TAKEN }, values };
+      return { fieldErrors: { email: AUTH_MESSAGES.emailTaken }, values };
     }
     if (isApiError(error) && error.status === 400) {
       const fieldErrors = issuesToFieldErrors(

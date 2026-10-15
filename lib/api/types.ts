@@ -18,6 +18,16 @@ export interface CreateUserDto {
   password: string;
 }
 
+/** `POST /users/staff` (só ADMIN): cadastro de atendente ou administrador. */
+export interface CreateStaffDto extends CreateUserDto {
+  role: "SUPPORT" | "ADMIN";
+}
+
+/** `PATCH /users/{id}/role` (só ADMIN). */
+export interface ChangeRoleDto {
+  role: Role;
+}
+
 export interface PublicUser {
   id: string;
   name: string;
@@ -54,6 +64,17 @@ export interface Category {
   active?: boolean;
 }
 
+/** `POST /categories` (só ADMIN). */
+export interface CreateCategoryDto {
+  name: string;
+}
+
+/** `PATCH /categories/{id}` (só ADMIN): `name` e/ou `active`, pelo menos um. */
+export interface UpdateCategoryDto {
+  name?: string;
+  active?: boolean;
+}
+
 export interface Ticket {
   id: string;
   title: string;
@@ -66,4 +87,35 @@ export interface Ticket {
   createdAt: string;
   updatedAt: string;
   closedAt: string | null;
+}
+
+export interface CreateTicketDto {
+  title: string;
+  description: string;
+  priority: TicketPriority;
+  categoryId: string;
+}
+
+/** ADMIN: obrigatório (usuário SUPPORT). SUPPORT: proibido (assume para si). */
+export interface AssignTicketDto {
+  assigneeId?: string;
+}
+
+export interface UpdateStatusDto {
+  status: TicketStatus;
+}
+
+/** `CommentResponse`: notas internas nunca vêm para o CUSTOMER. */
+export interface Comment {
+  id: string;
+  body: string;
+  isInternal: boolean;
+  createdAt: string;
+  author: UserSummary;
+}
+
+/** `isInternal` só para SUPPORT e ADMIN (CUSTOMER com `true` recebe 403). */
+export interface CreateCommentDto {
+  body: string;
+  isInternal?: boolean;
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDate, formatNumber, formatPercent } from "@/lib/format";
+import { formatDate, formatDateTime, formatNumber, formatPercent } from "@/lib/format";
 import {
   PRIORITY_LABELS,
   PRIORITY_ORDER,
@@ -24,6 +24,8 @@ describe("formatação pt-BR", () => {
   it("data no horário de Brasília", () => {
     expect(formatDate("2026-10-14T02:00:00.000Z")).toBe("13/10/2026");
     expect(formatDate("2026-10-14T15:00:00.000Z")).toBe("14/10/2026");
+    expect(formatDateTime("2026-10-14T15:30:00.000Z")).toBe("14/10/2026, 12:30");
+    expect(formatDateTime("2026-10-14T02:05:00.000Z")).toBe("13/10/2026, 23:05");
   });
 });
 
