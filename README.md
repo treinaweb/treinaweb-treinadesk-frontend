@@ -8,6 +8,12 @@ O navegador nunca chama a API: toda chamada passa pelo servidor Next (BFF), e os
 - `docs/api-reference.md`: contrato da API (Swagger em `http://localhost:3000/docs`).
 - `components/ui/references/design-system.md`: design system.
 
+## API
+
+O backend fica em outro repositório: [treinaweb/treinaweb-treinadesk](https://github.com/treinaweb/treinaweb-treinadesk). Siga o README de lá para subir a API localmente.
+
+Para explorar os endpoints à mão, importe `endpoints-treinadesk-api.yaml` no Insomnia (Import → arquivo). A coleção cobre health check, Auth (login, refresh, logout), Users, Categories e Tickets (criação, atribuição, status e comentários). Os tokens e IDs salvos nas requisições são de exemplo: faça login e troque o bearer token e os IDs pelos do seu ambiente.
+
 ## Configuração
 
 Pré-requisitos: Node 24 e a API TreinaDesk rodando (por padrão em `http://localhost:3000`).
